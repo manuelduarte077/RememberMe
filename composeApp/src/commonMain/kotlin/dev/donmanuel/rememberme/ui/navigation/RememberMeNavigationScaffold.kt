@@ -29,7 +29,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RememberMeNavigationScaffold(
     viewState: BirthdaysViewState,
@@ -83,12 +83,13 @@ fun RememberMeNavigationScaffold(
 
     Scaffold(
         topBar = {
-            MediumFlexibleTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         currentDestination.title,
                     )
                 },
+                colors = TopAppBarDefaults.topAppBarColors(),
                 navigationIcon = {
                     if (currentRoute is AppRoute.BirthdayDetail) {
                         IconButton(

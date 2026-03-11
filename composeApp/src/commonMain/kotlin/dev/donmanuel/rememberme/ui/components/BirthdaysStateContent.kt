@@ -1,52 +1,93 @@
 package dev.donmanuel.rememberme.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.donmanuel.rememberme.presentation.model.BirthdaysUiState
 
 @Composable
 fun BirthdaysStateContent(
     uiState: BirthdaysUiState,
-    onBirthdaySelected: (String) -> Unit
+    onBirthdaySelected: (String) -> Unit,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     when (uiState) {
         BirthdaysUiState.Idle -> {
-            Text("Ingresa la URL y API key para consultar tu backend.")
+            StateMessageCard(
+                modifier = modifier,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = null
+                    )
+                },
+                title = "Todo listo para comenzar",
+                message = "Configura tus credenciales y toca \"Cargar cumpleaños\"."
+            )
         }
 
         BirthdaysUiState.Loading -> {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    CircularProgressIndicator()
+                    Text(
+                        text = "Cargando cumpleaños...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 
         is BirthdaysUiState.Error -> {
-            Text(
-                text = uiState.message,
-                color = Color(0xFFB00020)
+            StateMessageCard(
+                modifier = modifier,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Error,
+                        contentDescription = null
+                    )
+                },
+                title = "No fue posible cargar los datos",
+                message = uiState.message,
+                actionLabel = "Reintentar",
+                onActionClick = onRetry
             )
         }
 
         is BirthdaysUiState.Success -> {
             if (uiState.birthdays.isEmpty()) {
-                Text("No hay cumpleaños registrados.")
+                StateMessageCard(
+                    modifier = modifier,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = null
+                        )
+                    },
+                    title = "No hay cumpleaños registrados",
+                    message = "Tu backend respondió correctamente, pero no hay datos para mostrar."
+                )
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 4.dp, horizontal = 1.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(uiState.birthdays, key = { it.id }) { birthday ->
@@ -54,6 +95,46 @@ fun BirthdaysStateContent(
                             item = birthday,
                             onClick = { onBirthdaySelected(birthday.id) }
                         )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StateMessageCard(
+    modifier: Modifier,
+    icon: @Composable () -> Unit,
+    title: String,
+    message: String,
+    actionLabel: String? = null,
+    onActionClick: (() -> Unit)? = null
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 18.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                icon()
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = message,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (actionLabel != null && onActionClick != null) {
+                    TextButton(onClick = onActionClick) {
+                        Text(actionLabel)
                     }
                 }
             }
