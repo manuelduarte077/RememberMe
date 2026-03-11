@@ -1,10 +1,10 @@
 package dev.donmanuel.rememberme
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import dev.donmanuel.rememberme.di.AppDi
 import dev.donmanuel.rememberme.ui.navigation.RememberMeNavigationScaffold
+import dev.donmanuel.rememberme.ui.theme.RememberMeTheme
 
 @Composable
 @Preview
@@ -22,7 +22,7 @@ fun App() {
         }
     }
 
-    MaterialTheme {
+    RememberMeTheme {
         RememberMeNavigationScaffold(
             viewState = viewState,
             onBaseUrlChanged = viewModel::onBaseUrlChanged,
