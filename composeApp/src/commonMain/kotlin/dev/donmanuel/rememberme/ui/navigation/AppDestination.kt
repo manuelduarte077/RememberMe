@@ -8,8 +8,8 @@ data class AppDestination(
     companion object {
         val birthdays = AppDestination(
             route = AppRoute.Birthdays,
-            label = "Birthdays",
-            title = "RememberMe Mobile"
+            label = "Cumpleaños",
+            title = "RememberMe"
         )
 
         val addBirthday = AppDestination(
@@ -20,7 +20,7 @@ data class AppDestination(
 
         val about = AppDestination(
             route = AppRoute.About,
-            label = "About",
+            label = "Acerca de",
             title = "Acerca de la app"
         )
 

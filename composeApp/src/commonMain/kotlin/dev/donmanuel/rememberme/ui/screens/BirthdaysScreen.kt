@@ -1,9 +1,6 @@
 package dev.donmanuel.rememberme.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,7 +20,9 @@ fun BirthdaysScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .navigationBarsPadding()
+            .imePadding(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         ApiCredentialsSection(
@@ -38,7 +37,9 @@ fun BirthdaysScreen(
 
         BirthdaysStateContent(
             uiState = viewState.uiState,
-            onBirthdaySelected = onBirthdaySelected
+            onBirthdaySelected = onBirthdaySelected,
+            onRetry = onLoadBirthdays,
+            modifier = Modifier.weight(1f)
         )
     }
 }
